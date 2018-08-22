@@ -14,9 +14,10 @@ app.set('view engine','handlebars');
 
 
 // handlein routes
-const main = require('./routes/home/main');
-app.use('/',main);
-
+const home = require('./routes/home/index');
+app.use('/',home);
+const admin = require('./routes/admin/index');
+app.use('/admin',admin);
 
 
 
