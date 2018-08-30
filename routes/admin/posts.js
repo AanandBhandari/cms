@@ -1,5 +1,6 @@
 let router = require('express').Router();
 const Post = require('../../models/Posts');
+const {isEmpty} = require('../../helpers/upload-testFile');
 
 // over-ridding the default layout
 router.all('/*',(req,res,next) => {
@@ -20,21 +21,33 @@ router.get('/create',(req,res) => {
    res.render('admin/posts/create');
 });
 router.post('/create',(req,res) => {
-    let allowComments = true;
-    if (req.body.allowComments) {
-        allowComments = true;
-    } else {
-        allowComments = false;
+    // console.log(isEmpty(req.files));
+    if (!isEmpty(req.files)) {
+        let file = req.files.file;
+        file.mv('./public/uploads/' +file.name,(err)=> {
+            if(err) throw err;
+        });
     }
-    const newPost = new Post({
-        title : req.body.title,
-        status : req.body.status,
-        allowComments,
-        body : req.body.body
-    });
-    newPost.save().then(savedPost => {
-        res.redirect('/admin/posts')
-    }).catch(e => console.log('unable to save'));
+
+
+    
+
+
+    // let allowComments = true;
+    // if (req.body.allowComments) {
+    //     allowComments = true;
+    // } else {
+    //     allowComments = false;
+    // }
+    // const newPost = new Post({
+    //     title : req.body.title,
+    //     status : req.body.status,
+    //     allowComments,
+    //     body : req.body.body
+    // });
+    // newPost.save().then(savedPost => {
+    //     res.redirect('/admin/posts')
+    // }).catch(e => console.log('unable to save'));
 
  });
 

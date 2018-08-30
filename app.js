@@ -6,6 +6,7 @@ const port = 3000;
 const bodyParser = require('body-parser');
 const mongoose = require('mongoose');
 const methodeOverRide = require('method-override');
+const upload = require('express-fileupload');
 
 
 // connecting to database
@@ -23,6 +24,9 @@ app.set('view engine','handlebars');
 
 // method overRide middleware
 app.use(methodeOverRide('_method'));
+
+// using fileuploads middleware
+app.use(upload());
 
 // body parser
 app.use(bodyParser.urlencoded({extended: true}));
