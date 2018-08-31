@@ -40,16 +40,29 @@ router.post('/create',(req,res) => {
     } else {
         allowComments = false;
     }
-    const newPost = new Post({
-        title : req.body.title,
-        status : req.body.status,
-        allowComments,
-        body : req.body.body,
-        file:filename
-    });
-    newPost.save().then(savedPost => {
-        res.redirect('/admin/posts')
-    }).catch(e => console.log('unable to save'));
+
+    // checkiing for validation and pushing error on error array
+    let error = [];
+    if (!req.body.title) {
+        error.push({message : 'please provide title'});
+    } 
+    if (!req.body.body) {
+        error.push({message : 'please provide description'});
+    } 
+    if (error.length>0) {
+        res.render('admin/posts/create',{error})
+    } else {
+        const newPost = new Post({
+            title : req.body.title,
+            status : req.body.status,
+            allowComments,
+            body : req.body.body,
+            file:filename
+        });
+        newPost.save().then(savedPost => {
+            res.redirect('/admin/posts')
+        }).catch(e => console.log('unable to save'));
+    }
 
  });
 
@@ -85,7 +98,7 @@ router.delete('/:id',(req,res) => {
     Post.findOne({_id: req.params.id})
     .then(post => {
         fs.unlink(uploadDir + post.file,(err) => {
-            post.remove();
+            post.remove(); 
             res.redirect('/admin/posts');
         });
         
