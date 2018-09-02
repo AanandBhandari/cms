@@ -89,7 +89,16 @@ router.post('/create',(req,res) => {
         post.status = req.body.status;
         post.allowComments = allowComments;
         post.body = req.body.body;
+        if (!isEmpty(req.files)) {
+            let file = req.files.file;
+            filename = Date.now()+'--'+file.name;
+            post.file = filename;
+            file.mv('./public/uploads/' +filename,(err)=> {
+                if(err) throw err;
+            });
+        }
         post.save().then((updatedPost) => {
+            req.flash('success_edit_message',`Post ${updatedPost.title} was edited sucessfully`);
             res.redirect('/admin/posts');
         })
     })).catch(e => res.status(400).send());
@@ -101,6 +110,7 @@ router.delete('/:id',(req,res) => {
     .then(post => {
         fs.unlink(uploadDir + post.file,(err) => {
             post.remove(); 
+            req.flash('success_delete_message',`Post ${post.title} was deleted sucessfully`);
             res.redirect('/admin/posts');
         });
         
