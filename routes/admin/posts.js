@@ -24,7 +24,7 @@ router.get('/create',(req,res) => {
 });
 router.post('/create',(req,res) => {
     // console.log(isEmpty(req.files));
-    let filename = '1_JYiZDB5AfVAlVLdGmsQ3bg.jpeg'
+    let filename = 'medium.jpg';
     if (!isEmpty(req.files)) {
         let file = req.files.file;
         filename = Date.now()+'--'+file.name;
@@ -60,6 +60,8 @@ router.post('/create',(req,res) => {
             file:filename
         });
         newPost.save().then(savedPost => {
+            // setting up flash message
+            req.flash('success_message',`Post ${savedPost.title} was created sucessfully`);
             res.redirect('/admin/posts')
         }).catch(e => console.log('unable to save'));
     }

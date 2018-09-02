@@ -7,6 +7,8 @@ const bodyParser = require('body-parser');
 const mongoose = require('mongoose');
 const methodeOverRide = require('method-override');
 const upload = require('express-fileupload');
+const flash = require('connect-flash');
+const session = require('express-session');
 
 
 // connecting to database
@@ -21,6 +23,22 @@ app.use(express.static(path.join(__dirname,'public')));
 const {select} = require('./helpers/handlebars-helper');
 app.engine('handlebars',exphbs({defaultLayout:'home', helpers:{select}}));
 app.set('view engine','handlebars');
+
+
+// express-session and flash middleware
+app.use(session({
+    secret: 'keyboard cat',
+    resave: true,
+    saveUninitialized: true,
+    // cookie: { secure: true }
+  }));
+  app.use(flash());
+//   local variables using middleware
+app.use((req,res,next) => {
+    res.locals.success_message = req.flash('success_message');
+    res.locals.success_fake_message = req.flash('success_fake_message');
+    next();
+})
 
 // method overRide middleware
 app.use(methodeOverRide('_method'));
