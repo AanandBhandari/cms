@@ -20,8 +20,8 @@ mongoose.connect('mongodb://localhost:27017/cms',{ useNewUrlParser: true })
 app.use(express.static(path.join(__dirname,'public')));
 
 // settng handlebars middleware
-const {select} = require('./helpers/handlebars-helper');
-app.engine('handlebars',exphbs({defaultLayout:'home', helpers:{select}}));
+const {select,GenerateTime} = require('./helpers/handlebars-helper');
+app.engine('handlebars',exphbs({defaultLayout:'home', helpers:{select,GenerateTime}}));
 app.set('view engine','handlebars');
 
 
