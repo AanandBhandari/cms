@@ -1,4 +1,5 @@
-let router = require('express').Router();
+const router = require('express').Router();
+const Post = require('../../models/Posts');
 
 router.all('/*',(req,res,next) => {
     req.app.locals.layout ='home';
@@ -7,7 +8,12 @@ router.all('/*',(req,res,next) => {
 
 
 router.get('/',(req,res) => {
-    res.render('home/index');
+    
+    Post.find({}).then((posts) => {
+        res.render('home/index',{posts});
+    }).catch(e => {
+        res.status(400).send();
+    });
     // res.send('hellowworld');
 });
 router.get('/about',(req,res) => {
@@ -20,6 +26,15 @@ router.get('/login',(req,res) => {
 });
 router.get('/register',(req,res) => {
     res.render('home/register');
+    // res.send('hellowworld');
+});
+router.get('/post/:id',(req,res) => {
+    Post.findOne({_id : req.params.id}).then(post => {
+        res.render('home/post',{post});
+    }).catch(e => {
+        res.status(400).send();
+    });
+    
     // res.send('hellowworld');
 });
 module.exports = router;
