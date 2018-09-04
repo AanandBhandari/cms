@@ -61,6 +61,8 @@ const admin = require('./routes/admin/index');
 app.use('/admin',admin);
 const posts = require('./routes/admin/posts');
 app.use('/admin/posts',posts);
+const categories = require('./routes/admin/categories');
+app.use('/admin/categories',categories);
 
 
 
