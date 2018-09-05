@@ -3,6 +3,8 @@ const Post = require('../../models/Posts');
 const Category = require('../../models/Category');
 const User = require('../../models/User');
 const bcrypt = require('bcryptjs');
+const passport = require('passport');
+const LocalStragety = require('passport-local').Strategy;
 
 router.all('/*',(req,res,next) => {
     req.app.locals.layout ='home';
@@ -30,33 +32,75 @@ router.get('/login',(req,res) => {
     res.render('home/login');
     // res.send('hellowworld');
 });
+// here,while passport.authenticate is being executed 
+// this middleware,..email and password is taken from req.body nd by default usernamefield is username
+// bt in our app we use email so we need to change it to email 
+passport.use(new LocalStragety({usernameField:'email'},(email,password,done) => {
+    // console.log(password)
+    // finding the user
+    User.findOne({ email }, function(err, user) {
+        if (err) { return done(err); }
+        if (!user) {
+            // false because there is no user
+          return done(null, false, { message: 'Incorrect email.' });
+        }
+        bcrypt.compare(password,user.password,(err,matched) => {
+            if(err) return err;
+            if (matched) {
+                return done(null,user);
+            } else {
+                return done(null, false, { message: 'Incorrect password.' });
+            }
+        })
+      });
+}));
+passport.serializeUser(function(user, done) {
+    done(null, user.id);
+  });
+  
+  passport.deserializeUser(function(id, done) {
+    User.findById(id, function(err, user) {
+      done(err, user);
+    });
+  });
+router.post('/login',(req,res,next) => {
+   passport.authenticate('local',{
+       successRedirect : '/admin',
+       failureRedirect : '/login',
+       failureFlash : true
+   })(req,res,next);
+});
+router.get('/logout',(req,res) => {
+    req.logOut();
+    res.redirect('/login');
+});
 router.get('/register',(req,res) => {
     res.render('home/register');
     // res.send('hellowworld');
 });
 router.post('/register',(req,res) => {
-    let error = [];
+    let errors = [];
     if (!req.body.firstName) {
-        error.push({message : 'please provide first-name'});
+        errors.push({message : 'please provide first-name'});
     } 
     if (!req.body.lastName) {
-        error.push({message : 'please provide last-name'});
+        errors.push({message : 'please provide last-name'});
     } 
     if (!req.body.email) {
-        error.push({message : 'please provide email'});
+        errors.push({message : 'please provide email'});
     } 
     if (!req.body.password) {
-        error.push({message : 'please provide password'});
+        errors.push({message : 'please provide password'});
     } 
     if (!req.body.passwordConfirm) {
-        error.push({message : 'please confirm the password'});
+        errors.push({message : 'please confirm the password'});
     } 
     if (req.body.password !== req.body.passwordConfirm) {
-        error.push({message : 'Password do not match!'});
+        errors.push({message : 'Password do not match!'});
     } 
-    if (error.length>0) {
+    if (errors.length>0) {
         let body = req.body;
-        res.render('home/register',{error,body})
+        res.render('home/register',{errors,body})
     } else {
         User.findOne({email : req.body.email}).then(user => {
             if (!user) {

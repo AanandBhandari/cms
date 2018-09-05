@@ -4,9 +4,10 @@ const Category = require('../../models/Category');
 const {isEmpty,uploadDir} = require('../../helpers/upload-testFile');
 const fs = require('fs');
 const path = require('path');
+const {userAuthenticated} = require('../../helpers/authentication');
 
 // over-ridding the default layout
-router.all('/*',(req,res,next) => {
+router.all('/*',userAuthenticated,(req,res,next) => {
     req.app.locals.layout ='admin';
     next();
 })

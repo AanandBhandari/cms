@@ -9,10 +9,12 @@ const methodeOverRide = require('method-override');
 const upload = require('express-fileupload');
 const flash = require('connect-flash');
 const session = require('express-session');
+const {mongoDbUrl} = require('./config/database');
+const passport = require('passport');
 
 
 // connecting to database
-mongoose.connect('mongodb://localhost:27017/cms',{ useNewUrlParser: true })
+mongoose.connect(mongoDbUrl,{ useNewUrlParser: true })
 .then((db) => console.log('sucessfully cconnected to the database'))
 .catch(e => console.log(e));
 
@@ -33,13 +35,19 @@ app.use(session({
     // cookie: { secure: true }
   }));
   app.use(flash());
+
+//   passport initalization
+app.use(passport.initialize());
+app.use(passport.session());
 //   local variables using middleware
 app.use((req,res,next) => {
+    res.locals.user = req.user || null;
     res.locals.success_message = req.flash('success_message');
     res.locals.error_message = req.flash('error_message');
     res.locals.success_fake_message = req.flash('success_fake_message');
     res.locals.success_edit_message = req.flash('success_edit_message');
     res.locals.success_delete_message = req.flash('success_delete_message');
+    res.locals.error = req.flash('error');
     next();
 })
 
