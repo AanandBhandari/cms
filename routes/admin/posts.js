@@ -7,7 +7,7 @@ const path = require('path');
 const {userAuthenticated} = require('../../helpers/authentication');
 
 // over-ridding the default layout
-router.all('/*',userAuthenticated,(req,res,next) => {
+router.all('/*',(req,res,next) => {
     req.app.locals.layout ='admin';
     next();
 })
@@ -116,9 +116,14 @@ router.post('/create',(req,res) => {
 
 //  deleting
 router.delete('/:id',(req,res) => {
-    Post.findOne({_id: req.params.id})
+    Post.findOne({_id: req.params.id}).populate('comments')
     .then(post => {
         fs.unlink(uploadDir + post.file,(err) => {
+            if (!post.comments.length<1) {
+                post.comments.forEach(comment => {
+                    comment.remove();
+                });
+            }
             post.remove(); 
             req.flash('success_delete_message',`Post ${post.title} was deleted sucessfully`);
             res.redirect('/admin/posts');
