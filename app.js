@@ -39,6 +39,7 @@ app.use(session({
 //   passport initalization
 app.use(passport.initialize());
 app.use(passport.session());
+
 //   local variables using middleware
 app.use((req,res,next) => {
     res.locals.user = req.user || null;
@@ -72,6 +73,8 @@ const posts = require('./routes/admin/posts');
 app.use('/admin/posts',posts);
 const categories = require('./routes/admin/categories');
 app.use('/admin/categories',categories);
+const comments = require('./routes/admin/comments');
+app.use('/admin/comments',comments);
 
 
 

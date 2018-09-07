@@ -25,6 +25,7 @@ router.get('/',(req,res) => {
     // res.send('hellowworld');
 });
 router.get('/about',(req,res) => {
+    
     res.render('home/about');
     // res.send('hellowworld');
 });
@@ -54,7 +55,9 @@ passport.use(new LocalStragety({usernameField:'email'},(email,password,done) => 
         })
       });
 }));
+
 passport.serializeUser(function(user, done) {
+    
     done(null, user.id);
   });
   

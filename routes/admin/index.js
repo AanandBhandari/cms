@@ -3,18 +3,20 @@ const faker = require('faker');
 const Post = require('../../models/Posts');
 const {userAuthenticated} = require('../../helpers/authentication');
 // over-ridding the default layout
-router.all('/*',userAuthenticated,(req,res,next) => {
+router.all('/*',(req,res,next) => {
     req.app.locals.layout ='admin';
     next();
 })
 
 
 router.get('/',(req,res) => {
+    // console.log(req.user)
     res.render('admin/index');
     // res.send('hellowworld');
 });
 router.get('/dashboard',(req,res) => {
     res.render('admin/dashboard');
+    // console.log(req.session)
     // res.send('hellowworld');
 });
 router.post('/generate-fake-posts',(req,res) => {
