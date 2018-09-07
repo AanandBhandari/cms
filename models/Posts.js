@@ -1,6 +1,10 @@
 const mongoose = require('mongoose');
 const Schema = mongoose.Schema;
 const PostSchema = mongoose.Schema({
+    user : {
+        type : Schema.Types.ObjectId,
+        ref : 'User'
+    },
     category : {
         type : Schema.Types.ObjectId,
         ref : 'Category'

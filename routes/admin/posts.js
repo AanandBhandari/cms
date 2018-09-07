@@ -58,6 +58,7 @@ router.post('/create',(req,res) => {
         res.render('admin/posts/create',{error})
     } else {
         const newPost = new Post({
+            user : req.user.id,
             title : req.body.title,
             status : req.body.status,
             allowComments,
@@ -94,6 +95,7 @@ router.post('/create',(req,res) => {
             } else {
                 allowComments = false;
             }
+        post.user = req.user.id;    
         post.title = req.body.title;
         post.status = req.body.status;
         post.allowComments = allowComments;
