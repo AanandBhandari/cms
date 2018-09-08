@@ -1,4 +1,4 @@
-<h1>All posts</h1>
+<h1>My posts</h1>
 
 <table class="table table-bordered">
     <thead>
@@ -9,7 +9,7 @@
             <th>Status</th>
             <th>Category</th>
             <th>Allow Comments</th>
-            <th>View Post</th>
+            <th>Link</th>
             <th>Date</th>
         </tr>
     </thead>
@@ -24,12 +24,12 @@
             <td>{{allowComments}}</td>
             <td><a href="/post/{{_id}}">View</a></td>
             <td>{{GenerateTime date 'MMMM Do YYYY'}}</td>
-            {{!-- <td><a href="/admin/posts/edit/{{_id}}" class="btn btn-info">Edit</a></td>
+            <td><a href="/admin/posts/edit/{{_id}}" class="btn btn-info">Edit</a></td>
             <td>
                 <form action="/admin/posts/{{_id}}?_method=DELETE" method="POST">
                 <button class="btn btn-danger">Delete</button>
                 </form>
-            </td> --}}
+            </td>
         </tr>
         {{/each}}
     </tbody>
