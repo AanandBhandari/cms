@@ -1,8 +1,10 @@
+<div class="table-responsive">
 <table class="table">
   <thead>
     <tr>
       <th scope="col">Id</th>
       <th scope="col">Owner</th>
+      <th>Status</th>
       <th scope="col">Date</th>
     </tr>
   </thead>
@@ -11,6 +13,7 @@
     <tr>
       <td>{{id}}</td>
       <td>{{user.firstName}}</td>
+      <td><input data-id="{{id}}" type="checkbox" {{#if approveComment}} checked {{/if}} name="approveComment"></td>
       <td>{{GenerateTime date 'MMMM Do YYYY'}}</td>
       <td>
                 <form action="/admin/comments/{{_id}}?_method=DELETE" method="POST">
@@ -21,3 +24,4 @@
     {{/each}}
   </tbody>
 </table>
+</div>

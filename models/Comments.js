@@ -8,6 +8,10 @@ const CommentSchema = mongoose.Schema({
     body : {
         type : String,
         required : true
+    },
+    approveComment : {
+        type : Boolean,
+        default : false
     }
 });
 module.exports = mongoose.model('comments',CommentSchema);

@@ -18,6 +18,7 @@ router.post('/',(req,res) => {
         post.comments.push(newComment);
         post.save().then(savedPost => {
             newComment.save().then(savedComment => {
+                req.flash('success_message',`Your comment will reviewed in a moment :)`);
                 res.redirect(`/post/${post.id}`)
             })
         });
@@ -44,7 +45,15 @@ router.delete('/:id',(req,res) => {
     })).catch(e => res.status(400).send());
 
 });
-
+ router.post('/approve-comment',(req,res) => {
+    //  console.log(req.body.approveComment)
+    Comment.findByIdAndUpdate(req.body.id,{$set : {approveComment:req.body.approveComment}},(err,data) => {
+        if (err) {
+            return err;
+        }
+        res.send(data);
+    });
+ });
 
 
 module.exports = router;
