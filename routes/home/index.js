@@ -13,7 +13,11 @@ router.all('/*',(req,res,next) => {
 
 
 router.get('/',(req,res) => {
-    const perPage = 10;
+    Post.countDocuments().then(postCount => {
+        if (postCount<1) {
+            res.render('home/index',{Nopost: 'Please create the post first'});
+        } else {
+            const perPage = 10;
     const page = req.query.page || 1;
 
     
@@ -36,6 +40,10 @@ router.get('/',(req,res) => {
     }).catch(e => {
         res.status(400).send();
     });
+        }
+    });
+    
+    
     // res.send('hellowworld');
 });
 router.get('/about',(req,res) => {

@@ -1,9 +1,10 @@
 let router = require('express').Router();
 const Comment = require('../../models/Comments');
 const Post = require('../../models/Posts');
+const {userAuthenticated} = require('../../helpers/authentication');
 
 // over-ridding the default layout
-router.all('/*',(req,res,next) => {
+router.all('/*',userAuthenticated,(req,res,next) => {
     req.app.locals.layout ='admin';
     next();
 });
