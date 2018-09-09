@@ -2,7 +2,6 @@ const express = require('express');
 let app = express();
 const exphbs = require('express-handlebars');
 const path = require('path');
-const port = 3000;
 const bodyParser = require('body-parser');
 const mongoose = require('mongoose');
 const methodeOverRide = require('method-override');
@@ -11,6 +10,7 @@ const flash = require('connect-flash');
 const session = require('express-session');
 const {mongoDbUrl} = require('./config/database');
 const passport = require('passport');
+const port = process.env.PORT || 3000;
 
 
 // connecting to database
