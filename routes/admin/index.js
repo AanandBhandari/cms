@@ -10,12 +10,14 @@ router.all('/*',(req,res,next) => {
 
 
 router.get('/',(req,res) => {
-    // console.log(req.user)
-    res.render('admin/index');
+    Post.countDocuments({}).then(postCount => {
+        res.render('admin/index',{postCount});
+    })
+    
     // res.send('hellowworld');
 });
 router.get('/dashboard',(req,res) => {
-    res.render('admin/dashboard');
+    res.redirect('/admin');
     // console.log(req.session)
     // res.send('hellowworld');
 });

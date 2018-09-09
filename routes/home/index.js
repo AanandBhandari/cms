@@ -135,8 +135,8 @@ router.post('/register',(req,res) => {
         
     // res.send('hellowworld');
 }});
-router.get('/post/:id',(req,res) => {
-    Post.findOne({_id : req.params.id}).populate({path : 'comments', match:{approveComment:true}, populate : {path : 'user', model :'User'}})
+router.get('/post/:slug',(req,res) => {
+    Post.findOne({slug : req.params.slug}).populate({path : 'comments', match:{approveComment:true}, populate : {path : 'user', model :'User'}})
     .populate('user')
     .then(post => {
         // res.render('home/post',{post});
