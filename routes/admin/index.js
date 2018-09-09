@@ -32,6 +32,7 @@ router.post('/generate-fake-posts',(req,res) => {
         post.allowComments = faker.random.boolean();
         post.body = faker.lorem.sentence();
         post.file =filename;
+        post.slug = faker.name.title();
         post.save();
 
         
