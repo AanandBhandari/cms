@@ -118,8 +118,8 @@ passport.use(new LocalStragety({usernameField:'email'},(email,password,done) => 
 // google stragety
 passport.use(
     new googleStrategy({
-        clientID: keys.clientID || process.env.GOOGLE_CLIENT_ID ,
-        clientSecret: keys.clientSecret || process.env._SECRET,
+        clientID: keys.clientID ,
+        clientSecret: keys.clientSecret,
         callbackURL: "http://localhost:3000/google/redirect"
 },(accessToken,refreshToken,profile,done) => {
     // passport callback function
