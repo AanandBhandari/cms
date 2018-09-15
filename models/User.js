@@ -14,12 +14,13 @@ const UserSchema = mongoose.Schema({
         required : true
     },
     password : {
-        type : String,
-        required :  true
+        type : String
     },
     date : {
         type : Date,
         default : Date.now()
-    }
+    },
+    googleId : String,
+    profilePic : String
 });
 module.exports = mongoose.model('User',UserSchema);

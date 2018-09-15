@@ -5,6 +5,9 @@ const User = require('../../models/User');
 const bcrypt = require('bcryptjs');
 const passport = require('passport');
 const LocalStragety = require('passport-local').Strategy;
+const FacebookStrategy = require('passport-facebook').Strategy;
+const googleStrategy = require('passport-google-oauth20').Strategy;
+const keys = require('../../config/googlauth');
 
 router.all('/*',(req,res,next) => {
     req.app.locals.layout ='home';
@@ -79,8 +82,75 @@ passport.use(new LocalStragety({usernameField:'email'},(email,password,done) => 
       });
 }));
 
-passport.serializeUser(function(user, done) {
+// facebook-stragety
+// let FACEBOOK_APP_ID = '490231484777745';
+// let FACEBOOK_APP_SECRET = 'b8c09b9ff52033a8fea09f4290ac8b53'
+// passport.use(new FacebookStrategy({
+//     clientID: FACEBOOK_APP_ID,
+//     clientSecret: FACEBOOK_APP_SECRET,
+//     callbackURL: "http://localhost:3000/auth/facebook/callback"
+//   },
+//   function(accessToken, refreshToken, profile, cb) {
+//       console.log(profile);
+//     // User.findOrCreate({ facebookId: profile.id }, function (err, user) {
+//     //   return cb(err, user);
+//     // });
+//     User.findOne({facebookId: profile.id}).then((currentUser)=>{
+//         if (currentUser) {
+//             console.log('user is:',currentUser);
+//             done(null,currentUser);
+//         } else {
+//             new User({ 
+//                 username: profile.displayName,
+//                 googleId: profile.id,
+//                 thumbNail:profile._json.image.url
+//             }).save().then((newUser) => {
+//                 console.log('new user added',newUser);
+//                 done(null,newUser);
+//             });
+//         }
+//     });
+//   }
+// ));
+
+
+
+// google stragety
+passport.use(
+    new googleStrategy({
+        clientID: keys.clientID || process.env.GOOGLE_CLIENT_ID ,
+        clientSecret: keys.clientSecret || process.env._SECRET,
+        callbackURL: "http://localhost:3000/google/redirect"
+},(accessToken,refreshToken,profile,done) => {
+    // passport callback function
+    // cheak user if already exist in db
+    User.findOne({googleId: profile.id}).then((user)=>{
+        if (user) {
+            // console.log('user is:',user);
+            done(null,user);
+        } else {
+             new User({
+                firstName : profile.name.givenName,
+                lastName : profile.name.familyName,
+                email : profile.emails[0].value,
+                googleId : profile._json.id,
+                profilePic : profile._json.image.url
+            }).save().then((newUser) => {
+                    // console.log('new user added',newUser);
+                    done(null,newUser);
+                });
+            // console.log(profile);
+        }
+    });
     
+    // console.log(accessToken);
+    // done(null,profile);
+})
+);
+
+
+passport.serializeUser(function(user, done) {
+    // console.log(user.id);
     done(null, user.id);
   });
   
@@ -89,6 +159,15 @@ passport.serializeUser(function(user, done) {
       done(err, user);
     });
   });
+
+// google login
+router.get('/google',passport.authenticate('google',{scope:['profile','email']}));
+
+router.get('/google/redirect',passport.authenticate('google'),(req,res) => {
+    res.redirect('/admin/')
+})
+
+//   local login
 router.post('/login',(req,res,next) => {
    passport.authenticate('local',{
        successRedirect : '/admin',
@@ -162,6 +241,7 @@ router.get('/post/:slug',(req,res) => {
     Post.findOne({slug : req.params.slug}).populate({path : 'comments', match:{approveComment:true}, populate : {path : 'user', model :'User'}})
     .populate('user')
     .then(post => {
+        // console.log(post.user)
         // res.render('home/post',{post});
         // console.log(post)
         Category.find({}).then(categories => {
