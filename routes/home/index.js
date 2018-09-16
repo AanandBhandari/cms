@@ -160,7 +160,7 @@ passport.use(
     new googleStrategy({
         clientID: keys.clientID ,
         clientSecret: keys.clientSecret,
-        callbackURL: "http://postany.herokuapp.com/google/redirect"
+        callbackURL: "https://postany.herokuapp.com/google/redirect"
 },(accessToken,refreshToken,profile,done) => {
     // passport callback function
     // cheak user if already exist in db
