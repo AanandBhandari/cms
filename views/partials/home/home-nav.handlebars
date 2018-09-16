@@ -25,8 +25,11 @@
               <a class="nav-link" href="/register">Register</a>
             </li>
             {{/unless}}
+            {{#if user}}
+            <li class="nav-item">
               <a class="nav-link" href="/admin">Admin</a>
             </li>
+            {{/if}}
           </ul>
           
         </div>
