@@ -160,7 +160,7 @@ passport.use(
     new googleStrategy({
         clientID: keys.clientID ,
         clientSecret: keys.clientSecret,
-        callbackURL: "/google/redirect"
+        callbackURL: "/admin"
 },(accessToken,refreshToken,profile,done) => {
     // passport callback function
     // cheak user if already exist in db
