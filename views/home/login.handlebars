@@ -13,9 +13,9 @@
 
     <div class="card-body">
         <form action="/login" method="post">
-            {{#if error}}
+            {{#if message}}
                 <div class="alert alert-danger">
-                    {{error}}
+                    {{message}}
                 </div>
             {{/if}}
             <div class="form-group">

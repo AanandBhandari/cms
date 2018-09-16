@@ -72,7 +72,7 @@ passport.use(new LocalStragety({usernameField:'email'},(email,password,done) => 
           return done(null, false, { message: 'Incorrect email.' });
         }
         bcrypt.compare(password,user.password,(err,matched) => {
-            if(err) return err;
+            if(err) { return done(null, false, { message: 'This account has already been registered through Google+.' });}
             if (matched) {
                 return done(null,user);
             } else {

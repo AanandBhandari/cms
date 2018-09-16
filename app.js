@@ -7,9 +7,10 @@ const mongoose = require('mongoose');
 const methodeOverRide = require('method-override');
 const upload = require('express-fileupload');
 const flash = require('connect-flash');
-const session = require('express-session');
+// const session = require('express-session');
 const {mongoDbUrl} = require('./config/database');
 const passport = require('passport');
+const cookieSession = require('cookie-session')
 const port = process.env.PORT || 3000;
 
 
@@ -26,14 +27,22 @@ const {select,GenerateTime,paginate} = require('./helpers/handlebars-helper');
 app.engine('handlebars',exphbs({defaultLayout:'home', helpers:{select,GenerateTime,paginate}}));
 app.set('view engine','handlebars');
 
+app.use(cookieSession({
+    name: 'session',
+    keys: ['itssecret'],
+   
+    // Cookie Options
+    maxAge: 24 * 60 * 60 * 1000 // 24 hours
+  }));
+
 
 // express-session and flash middleware
-app.use(session({
-    secret: 'keyboard cat',
-    resave: true,
-    saveUninitialized: true,
-    // cookie: { secure: true }
-  }));
+// app.use(session({
+//     secret: 'keyboard cat',
+//     resave: true,
+//     saveUninitialized: true,
+//     // cookie: { secure: true }
+//   }));
   app.use(flash());
 
 //   passport initalization
