@@ -8,12 +8,52 @@ const LocalStragety = require('passport-local').Strategy;
 const FacebookStrategy = require('passport-facebook').Strategy;
 const googleStrategy = require('passport-google-oauth20').Strategy;
 const keys = require('../../config/googlauth');
+const {userUnAuthenticated} = require('../../helpers/authentication');
 
 router.all('/*',(req,res,next) => {
     req.app.locals.layout ='home';
     next();
 });
 
+router.get('/category/:name',(req,res) => {
+    Category.findOne({name : req.params.name}).then((category) => {
+        const perPage = 10;
+        const page = req.query.page || 1;        
+        Post.find({category:category._id})
+        .populate('user')
+        .skip((perPage * page) - perPage)
+        .limit(perPage)
+        .then((posts) => {
+            Post.countDocuments({category:category._id}).then(postCount => {
+                if (postCount<1) {
+                    Category.find({}).then(categories => {
+                        res.render('home/index',{
+                            Nopost: `There is no such post of category:- ${req.params.name} `,
+                            categories
+                        });
+                    });
+                } else{
+                    Category.find({}).then(categories => {
+                        res.render('home/index',{
+                            posts,
+                            categories,
+                            current : parseInt(page),
+                            pages : Math.ceil(postCount/perPage)
+                        });
+                    });
+
+                }
+               
+            })
+           
+            
+        }).catch(e => {
+            res.status(400).send();
+        });
+          
+    });
+    
+});
 
 router.get('/',(req,res) => {
     Post.countDocuments().then(postCount => {
@@ -55,7 +95,7 @@ router.get('/about',(req,res) => {
     res.render('home/about');
     // res.send('hellowworld');
 });
-router.get('/login',(req,res) => {
+router.get('/login',userUnAuthenticated,(req,res) => {
     res.render('home/login');
     // res.send('hellowworld');
 });
@@ -179,7 +219,9 @@ router.get('/logout',(req,res) => {
     req.logOut();
     res.redirect('/login');
 });
-router.get('/register',(req,res) => {
+
+
+router.get('/register',userUnAuthenticated,(req,res) => {
     res.render('home/register');
     // res.send('hellowworld');
 });

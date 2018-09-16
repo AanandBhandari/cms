@@ -2,16 +2,25 @@
 
         <!-- Post Content Column -->
         <div class="col-lg-8">
-
+            <!-- Author -->
+          <p class="lead">
+            {{!-- by    <img class="d-flex mr-3 rounded-circle" src="{{user.profilePic}}" alt="">
+            <a href="#">{{post.user.firstName}}</a> --}}
+            <div class="media mb-4">
+              <div class="media-body">
+              <h5 class="mt-0"></h5>
+            </div>
+            <img class="d-flex mr-3 rounded-circle" src="{{post.user.profilePic}}" alt="">
+            <div class="media-body">
+              <h5 class="mt-0">{{post.user.firstName}}'s Post</h5>
+            </div>
+          </div>
+            
+          </p>    
           <!-- Title -->
           <h1 class="mt-4">{{post.title}}</h1>
 
-          <!-- Author -->
-          <p class="lead">
-            by
-            <a href="#">{{post.user.firstName}}</a>
-          </p>
-
+                  
           <hr>
 
           <!-- Date/Time -->

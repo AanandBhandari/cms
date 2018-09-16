@@ -17,8 +17,9 @@
               <a href="/post/{{slug}}" class="btn btn-primary">Read More &rarr;</a>
             </div>
             <div class="card-footer text-muted">
-              Posted on {{GenerateTime date 'MMMM Do YYYY'}} by
-              <a href="#">{{user.firstName}}</a>
+              Posted on {{GenerateTime date 'MMMM Do YYYY'}} by <a href="#"> <img class="d-flex mr-3 rounded-circle" src="{{user.profilePic}}" alt="">{{user.firstName}}</a>
+              <br>
+              
             </div>
           </div>
           {{/each}}
